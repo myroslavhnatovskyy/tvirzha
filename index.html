@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Твіржанський ЗЗСО</title>
+
+<style>
+:root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f1f5f9;
+    --accent: #6366f1;
+}
+
+body.light {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --text: #1a1a1a;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: var(--card);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+}
+
+a {
+    display: block;
+    margin: 10px 0;
+    text-decoration: none;
+    color: var(--accent);
+    font-size: 18px;
+}
+
+.controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+
+button {
+    margin-left: 10px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Footer */
+footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+footer.show {
+    opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<div class="controls">
+    <button onclick="toggleTheme()">🌙</button>
+    <button onclick="setLang('uk')">UA</button>
+    <button onclick="setLang('en')">EN</button>
+</div>
+
+<div class="container">
+    <h1 id="title"></h1>
+    <a href="https://tvirzha.blogspot.com" target="_blank" id="blog"></a>
+    <a href="contacts.html" id="contacts"></a>
+</div>
+
+<footer id="footer">
+    <span id="footer-text"></span> © <span id="year"></span>
+</footer>
+
+<script>
+const translations = {
+    uk: {
+        title: "Твіржанський ЗЗСО І-ІІІ ст",
+        blog: "Перейти до блогу школи",
+        contacts: "Контакти",
+        footer: "Сайт наразі оновлюється — незабаром тут з’явиться ще більше корисної інформації"
+    },
+    en: {
+        title: "Tvirzha General Secondary Education Institution (Levels I–III)",
+        blog: "Go to school blog",
+        contacts: "Contacts",
+        footer: "The website is being updated — more useful information is coming soon"
+    }
+};
+
+function setLang(lang) {
+    localStorage.setItem("lang", lang);
+    applyLang();
+}
+
+function applyLang() {
+    const lang = localStorage.getItem("lang") || "uk";
+    document.getElementById("title").innerText = translations[lang].title;
+    document.getElementById("blog").innerText = translations[lang].blog;
+    document.getElementById("contacts").innerText = translations[lang].contacts;
+    document.getElementById("footer-text").innerText = translations[lang].footer;
+}
+
+function toggleTheme() {
+    document.body.classList.toggle("light");
+    localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
+}
+
+function applyTheme() {
+    const theme = localStorage.getItem("theme") || "dark";
+    if (theme === "light") {
+        document.body.classList.add("light");
+    }
+}
+
+let lastScroll = 0;
+window.addEventListener("scroll", () => {
+    const footer = document.getElementById("footer");
+    if (window.scrollY > lastScroll) {
+        footer.classList.remove("show");
+    } else {
+        footer.classList.add("show");
+    }
+    lastScroll = window.scrollY;
+});
+
+document.getElementById("year").innerText = new Date().getFullYear();
+applyTheme();
+applyLang();
+
+setTimeout(() => {
+    document.getElementById("footer").classList.add("show");
+}, 300);
+</script>
+
+</body>
+</html>

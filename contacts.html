@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контакти</title>
+
+<style>
+:root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f1f5f9;
+    --accent: #6366f1;
+}
+
+body.light {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --text: #1a1a1a;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: var(--card);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+h1 {
+    text-align: center;
+}
+
+.info {
+    margin: 20px 0;
+    line-height: 1.6;
+}
+
+iframe {
+    width: 100%;
+    height: 400px;
+    border: 0;
+    border-radius: 12px;
+}
+
+.controls {
+    text-align: right;
+}
+
+button {
+    margin-left: 10px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+a {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: var(--accent);
+    text-decoration: none;
+}
+
+/* Map button */
+.map-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 20px;
+    background: var(--accent);
+    color: white;
+    text-align: center;
+    border-radius: 10px;
+    text-decoration: none;
+    width: fit-content;
+    transition: 0.2s;
+}
+
+.map-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+/* Footer */
+footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+footer.show {
+    opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<div class="controls">
+    <button onclick="toggleTheme()">🌙</button>
+    <button onclick="setLang('uk')">UA</button>
+    <button onclick="setLang('en')">EN</button>
+</div>
+
+<div class="container">
+    <h1 id="title"></h1>
+
+    <div class="info" id="info"></div>
+
+    <iframe src="https://maps.google.com/maps?q=49.80227003846851, 23.242689867541554&z=10&output=embed"></iframe>
+
+    <a 
+        id="map-link"
+        href="https://www.google.com/maps?q=49.80227003846851, 23.242689867541554" 
+        target="_blank"
+        class="map-btn">
+    </a>
+
+    <a href="index.html" id="back"></a>
+</div>
+
+<footer id="footer">
+    <span id="footer-text"></span> © <span id="year"></span>
+</footer>
+
+<script>
+const translations = {
+    uk: {
+        title: "Контакти",
+        info: `Львівська область<br>Яворівський район<br>село Твіржа<br>вул. Центральна 71<br>тел. 33-233`,
+        back: "← Назад",
+        footer: "Сайт наразі оновлюється — незабаром тут з’явиться ще більше корисної інформації",
+        map: "📍 Відкрити в Google Maps"
+    },
+    en: {
+        title: "Contacts",
+        info: `Lviv region<br>Yavoriv district<br>Tvirzha<br>Centralna St. 71<br>tel. 33-233`,
+        back: "← Back",
+        footer: "The website is being updated — more useful information is coming soon",
+        map: "📍 Open in Google Maps"
+    }
+};
+
+function setLang(lang) {
+    localStorage.setItem("lang", lang);
+    applyLang();
+}
+
+function applyLang() {
+    const lang = localStorage.getItem("lang") || "uk";
+    document.getElementById("title").innerText = translations[lang].title;
+    document.getElementById("info").innerHTML = translations[lang].info;
+    document.getElementById("back").innerText = translations[lang].back;
+    document.getElementById("footer-text").innerText = translations[lang].footer;
+    document.getElementById("map-link").innerText = translations[lang].map;
+}
+
+function toggleTheme() {
+    document.body.classList.toggle("light");
+    localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
+}
+
+function applyTheme() {
+    const theme = localStorage.getItem("theme") || "dark";
+    if (theme === "light") {
+        document.body.classList.add("light");
+    }
+}
+
+let lastScroll = 0;
+window.addEventListener("scroll", () => {
+    const footer = document.getElementById("footer");
+    if (window.scrollY > lastScroll) {
+        footer.classList.remove("show");
+    } else {
+        footer.classList.add("show");
+    }
+    lastScroll = window.scrollY;
+});
+
+document.getElementById("year").innerText = new Date().getFullYear();
+applyTheme();
+applyLang();
+
+setTimeout(() => {
+    document.getElementById("footer").classList.add("show");
+}, 300);
+</script>
+
+</body>
+</html>
